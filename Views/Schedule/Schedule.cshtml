@@ -1,0 +1,39 @@
+﻿@model PharmacyMedicineSupply.Models.RepSchedule
+
+@{
+    ViewData["Title"] = "Schedule";
+}
+
+<h1>Schedule</h1>
+
+<div>
+    <h4>RepSchedule</h4>
+    <hr />
+    <table class="table table-striped">
+        <tr>
+            <th>Rep Name</th>
+            <th>Doctor Name</th>
+            <th>Treating Ailment</th>
+            <th>Medicine</th>
+            <th>Slot</th>
+            <th>Date</th>
+            <th>Doctor Contact</th>
+        </tr>
+        @foreach(var i in @ViewBag.schedule)
+        {
+            <tr>
+                <td>@i.Rep_Name</td>
+                <td>@i.Doctor_Name</td>
+                <td>@i.Treating_Ailment</td>
+                <td>@i.Medicine</td>
+                <td>@i.Meeting_Slot</td>
+                <td>@i.Date_Of_Meeting</td>
+                <td>@i.Doctor_Contact_Number</td>
+            </tr>
+        }
+    </table>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
