@@ -23,51 +23,94 @@ namespace PharmacyMedicineSupply.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            if (HttpContext.Session.GetString("token") == null)
+            try
             {
-                _log.Info("token not found");
-                return RedirectToAction("Login", "User");
-            }
-            else
-            {
-                List<MedicineStock> stocks = new List<MedicineStock>();
-                List<MedicineDemand> demands = new List<MedicineDemand>();
-                _log.Info("Displaying Schedule input page");
-                response = await _demandProvider.GetStock();
-                if(response.IsSuccessStatusCode)
+                if (HttpContext.Session.GetString("token") == null)
                 {
-                    var result = await response.Content.ReadAsStringAsync();
-                    stocks = JsonConvert.DeserializeObject<List<MedicineStock>>(result);
-                    demands = _demandProvider.GetDemand(stocks);
-                    return View(demands);
+                    _log.Info("token not found");
+                    return RedirectToAction("Login", "User");
                 }
                 else
                 {
-                    return View("NoStock");
+                    _log.Info("Displaying Schedule input page");
+                    _response = await _demandProvider.GetStock();
+                    if(_response.IsSuccessStatusCode)
+                    {
+                        _log.Info("stock received");
+                        var result = await _response.Content.ReadAsStringAsync();
+                        List<MedicineStock> stocks = JsonConvert.DeserializeObject<List<MedicineStock>>(result);
+                        List<MedicineDemand> demands = _demandProvider.GetDemand(stocks);
+                        return View(demands);
+                    }
+                    else
+                    {
+                        _log.Error("error while getting stock");
+                        return View("NoStock");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _log.Info("Error in DemandController while displaying input page for user : "+HttpContext.Session.GetString("userName")+" - "+e.Message);
+                return View("Error");
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(IEnumerable<MedicineDemand> demands)
         {
-            response =await _demandProvider.GetSupply(demands.ToList());
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var result = await response.Content.ReadAsStringAsync();
-                List<Supply> supplies = JsonConvert.DeserializeObject<List<Supply>>(result);
-                return RedirectToAction("DisplaySupply");
+                if (HttpContext.Session.GetString("token") == null)
+                {
+                    _log.Info("token not found");
+                    return RedirectToAction("Login", "User");
+                }
+                else
+                {
+                    _response = await _demandProvider.GetSupply(demands.ToList());
+                    if (_response.IsSuccessStatusCode)
+                    {
+                        _log.Info("Supply received");
+                        var result = await _response.Content.ReadAsStringAsync();
+                        TempData["supply"] = result;
+                        return RedirectToAction("DisplaySupply");
+                    }
+                    else
+                    {
+                        _log.Error("error while getting supply");
+                        return View("NoStock");
+                    }
+                }
             }
-            else
+            catch (Exception e)
             {
-                return View("NoStock");
+                _log.Error("Error while getting demand list in DemandController for user : "+HttpContext.Session.GetString("userName")+" - "+e.Message);
+                return View("Error");
             }
-            
         }
 
-        public IActionResult DisplaySupply(List<Supply> supplies)
+        public IActionResult DisplaySupply()
         {
-            return View(supplies);
+            try
+            {
+                if (HttpContext.Session.GetString("token") == null)
+                {
+                    _log.Info("token not found");
+                    return RedirectToAction("Login", "User");
+                }
+                else
+                {
+                    _log.Info("Displaying Supply List");
+                    List<Supply> supplies = JsonConvert.DeserializeObject<List<Supply>>(TempData["supply"].ToString());
+                    return View(supplies.OrderBy(s => s.PharmacyName));
+                }
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error in Demand Controller while displaying Supply for user : "+ HttpContext.Session.GetString("userName") + " - " + e.Message);
+                throw;
+            }
         }
     }
 }

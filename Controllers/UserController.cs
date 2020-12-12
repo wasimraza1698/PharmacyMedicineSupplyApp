@@ -24,49 +24,83 @@ namespace PharmacyMedicineSupply.Controllers
         
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("token") == null)
+            try
             {
-                _log.Info("token not found");
-                return RedirectToAction("Login");
+                if (HttpContext.Session.GetString("token") == null)
+                {
+                    _log.Info("token not found");
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    _log.Info("Displaying Home Page");
+                    return View();
+                }
             }
-            else
+            catch (Exception e)
             {
-                _log.Info("Displaying Home Page");
-                return View();
+                _log.Error("Error in UserController - "+e.Message);
+                return View("Error");
             }
         }
         public IActionResult Login()
         {
-            _log.Info("Displaying Login Page");
-            
-            return View();
+            try
+            {
+                _log.Info("Displaying Login Page");
+                return View();
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error in UserController while displaying login page - "+e.Message);
+                return View("Error");
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(User credentials)
         {
-            HttpResponseMessage response = await  _userProvider.Login(credentials);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var result = await response.Content.ReadAsStringAsync();
-                JWT token = JsonConvert.DeserializeObject<JWT>(result);
-                HttpContext.Session.SetString("token",token.Token);
-                HttpContext.Session.SetString("userName", credentials.UserName);
-                ViewBag.UserName = credentials.UserName;
-                return View("Index");
+                HttpResponseMessage response = await  _userProvider.Login(credentials);
+                if (response.IsSuccessStatusCode)
+                {
+                    _log.Info("success response received");
+                    var result = await response.Content.ReadAsStringAsync();
+                    JWT token = JsonConvert.DeserializeObject<JWT>(result);
+                    HttpContext.Session.SetString("token",token.Token);
+                    HttpContext.Session.SetString("userName", credentials.UserName);
+                    ViewBag.UserName = credentials.UserName;
+                    return View("Index");
+                }
+                else
+                {
+                    _log.Info("invalid username or password for user : "+credentials.UserName);
+                    ViewBag.Info = "Invalid username/password";
+                    return View();
+                }
             }
-            else
+            catch (Exception e)
             {
-                ViewBag.Info = "Invalid username/password";
-                return View();
+                _log.Error("Error in UserController while logging in for user : "+credentials.UserName+" - " + e.Message);
+                return View("Error");
             }
         }
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("token");
-            HttpContext.Session.Remove("userName");
-            return View();
+            try
+            {
+                _log.Info("Logging out user : "+HttpContext.Session.GetString("userName"));
+                HttpContext.Session.Remove("token");
+                HttpContext.Session.Remove("userName");
+                return View();
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error in UserController while logging out for user : "+HttpContext.Session.GetString("userName")+" - " + e.Message);
+                return View("Error");
+            }
         }
     }
 }

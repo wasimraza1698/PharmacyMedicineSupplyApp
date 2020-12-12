@@ -8,9 +8,9 @@ namespace PharmacyMedicineSupply.Models
     public class MedicineStock
     {
         public string Name { get; set; }
-        public List<string> Chemical_Composition { get; set; }
-        public string Target_Ailment { get; set; }
-        public DateTime Date_Of_Expiry { get; set; }
-        public int Number_Of_Tablets_In_Stock { get; set; }
+        public List<string> ChemicalComposition { get; set; }
+        public string TargetAilment { get; set; }
+        public DateTime DateOfExpiry { get; set; }
+        public int NumberOfTabletsInStock { get; set; }
     }
 }

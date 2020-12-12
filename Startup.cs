@@ -28,6 +28,8 @@ namespace PharmacyMedicineSupply
             services.AddControllersWithViews();
             services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
             services.AddTransient<IUserProvider, UserProvider>();
+            services.AddTransient<IDemandProvider, DemandProvider>();
+            services.AddTransient<IRepScheduleProvider, RepScheduleProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

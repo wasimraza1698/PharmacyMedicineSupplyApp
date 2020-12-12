@@ -11,20 +11,22 @@ namespace PharmacyMedicineSupply.Providers
 {
     public class RepScheduleProvider : IRepScheduleProvider
     {
-        List<RepSchedule> res = new List<RepSchedule>();
-        public async Task<List<RepSchedule>> GetSchedule(DateTime startDate)
+        private readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(RepScheduleProvider));
+        public async Task<HttpResponseMessage> GetSchedule(DateTime startDate)
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44387/");
-            string s = (startDate.Day).ToString() + startDate.ToString("MMM") + (startDate.Year).ToString();
-            var response = await client.GetAsync("api/RepSchedule?startdate=" + s);
-            if (response.StatusCode == HttpStatusCode.OK)
+            try
             {
-                var jsonString = response.Content.ReadAsStringAsync().Result;
-                res = JsonConvert.DeserializeObject<List<RepSchedule>>(jsonString);
-
+                var client = new HttpClient();
+                string s = (startDate.Day).ToString() + startDate.ToString("MMM") + (startDate.Year).ToString();
+                var response = await client.GetAsync("https://localhost:44387/api/RepSchedule?startdate=" + s);
+                _log.Info("response received");
+                return response;
             }
-            return res;
+            catch (Exception e)
+            {
+                _log.Error("Error in RepScheduleProvider while getting Schedule - "+e.Message);
+                throw;
+            }
         }
     }
 }
