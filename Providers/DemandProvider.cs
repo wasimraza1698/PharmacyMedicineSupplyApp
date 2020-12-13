@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace PharmacyMedicineSupply.Providers
@@ -14,10 +16,14 @@ namespace PharmacyMedicineSupply.Providers
         private readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(DemandProvider));
 
         readonly HttpClient httpClient = new HttpClient();
-        public async Task<HttpResponseMessage> GetSupply(List<MedicineDemand> demands)
+        public async Task<HttpResponseMessage> GetSupply(List<MedicineDemand> demands,string token)
         {
             try
             {
+                var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+                httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
                 StringContent content= new StringContent(JsonConvert.SerializeObject(demands),Encoding.UTF8,"application/json"); 
                 var response = await httpClient.PostAsync("https://localhost:44377/PharmacySupply/Get", content);
                 _log.Info("response received");
@@ -30,7 +36,7 @@ namespace PharmacyMedicineSupply.Providers
             }
         }
 
-        public async Task<HttpResponseMessage> GetStock()
+        public async Task<HttpResponseMessage> GetStock(string token)
         {
             try
             {

@@ -17,6 +17,7 @@ namespace PharmacyMedicineSupply.Controllers
         private readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(DemandController));
         private readonly IDemandProvider _demandProvider;
         private HttpResponseMessage _response;
+        private string _token;
 
         public DemandController(IDemandProvider demandProvider)
         {
@@ -34,7 +35,8 @@ namespace PharmacyMedicineSupply.Controllers
                 else
                 {
                     _log.Info("Displaying Schedule input page");
-                    _response = await _demandProvider.GetStock();
+                    _token = HttpContext.Session.GetString("token");
+                    _response = await _demandProvider.GetStock(_token);
                     if(_response.IsSuccessStatusCode)
                     {
                         _log.Info("stock received");
@@ -73,7 +75,8 @@ namespace PharmacyMedicineSupply.Controllers
                 }
                 else
                 {
-                    _response = await _demandProvider.GetSupply(demands.ToList());
+                    _token = HttpContext.Session.GetString("token");
+                    _response = await _demandProvider.GetSupply(demands.ToList(),_token);
                     if (_response.IsSuccessStatusCode)
                     {
                         _log.Info("Supply received");

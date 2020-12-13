@@ -9,6 +9,6 @@ namespace PharmacyMedicineSupply.Providers
 {
     public interface IRepScheduleProvider
     {
-        public Task<HttpResponseMessage> GetSchedule(DateTime startDate);
+        public Task<HttpResponseMessage> GetSchedule(DateTime startDate,string token);
     }
 }

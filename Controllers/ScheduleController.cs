@@ -16,6 +16,7 @@ namespace PharmacyMedicineSupply.Controllers
     {
         private readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(UserController));
         private readonly IRepScheduleProvider _repProvider;
+        private string _token;
         public ScheduleController(IRepScheduleProvider repProvider)
         {
             _repProvider = repProvider;
@@ -39,7 +40,8 @@ namespace PharmacyMedicineSupply.Controllers
         {
             try
             {
-                HttpResponseMessage response = await _repProvider.GetSchedule(dates.Date);
+                _token = HttpContext.Session.GetString("token");
+                HttpResponseMessage response = await _repProvider.GetSchedule(dates.Date,_token);
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
