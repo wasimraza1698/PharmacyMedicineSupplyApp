@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,11 +75,16 @@ namespace PharmacyMedicineSupply.Controllers
                     ViewBag.UserName = credentials.UserName;
                     return View("Index");
                 }
-                else
+                else if(response.StatusCode == HttpStatusCode.NotFound)
                 {
                     _log.Info("invalid username or password for user : "+credentials.UserName);
                     ViewBag.Info = "Invalid username/password";
                     return View();
+                }
+                else
+                {
+                    _log.Error("Error in Micro-service called for Authentication");
+                    return View("Error");
                 }
             }
             catch (Exception e)

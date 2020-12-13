@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -34,21 +35,26 @@ namespace PharmacyMedicineSupply.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Index(ScheduleDate date)
+        public async Task<IActionResult> Index(ScheduleDate dates)
         {
             try
             {
-                HttpResponseMessage response = await _repProvider.GetSchedule(date.Date.Date);
+                HttpResponseMessage response = await _repProvider.GetSchedule(dates.Date);
                 if (response.IsSuccessStatusCode)
                 {
                     var result = response.Content.ReadAsStringAsync().Result;
                     TempData["result"] = result;
                     return RedirectToAction("Schedule");
                 }
+                else if(response.StatusCode==HttpStatusCode.NotFound)
+                {
+                    _log.Error("could not schedule");
+                    return View("NoSchedule");
+                }
                 else
                 {
-                    _log.Error("Error while getting schedule");
-                    return View("NoSchedule");
+                    _log.Error("Error occured in Micro-Service called for scheduling");
+                    return View("Error");
                 }
             }
             catch (Exception e)

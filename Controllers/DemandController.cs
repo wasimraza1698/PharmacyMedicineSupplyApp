@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -42,10 +43,14 @@ namespace PharmacyMedicineSupply.Controllers
                         List<MedicineDemand> demands = _demandProvider.GetDemand(stocks);
                         return View(demands);
                     }
-                    else
+                    else if(_response.StatusCode==HttpStatusCode.NotFound)
                     {
                         _log.Error("error while getting stock");
                         return View("NoStock");
+                    }
+                    else
+                    {
+                        return View("Error");
                     }
                 }
             }
@@ -76,10 +81,14 @@ namespace PharmacyMedicineSupply.Controllers
                         TempData["supply"] = result;
                         return RedirectToAction("DisplaySupply");
                     }
-                    else
+                    else if(_response.StatusCode==HttpStatusCode.NotFound)
                     {
                         _log.Error("error while getting supply");
                         return View("NoStock");
+                    }
+                    else
+                    {
+                        return View("Error");
                     }
                 }
             }
@@ -109,7 +118,7 @@ namespace PharmacyMedicineSupply.Controllers
             catch (Exception e)
             {
                 _log.Error("Error in Demand Controller while displaying Supply for user : "+ HttpContext.Session.GetString("userName") + " - " + e.Message);
-                throw;
+                return View("Error");
             }
         }
     }
