@@ -50,6 +50,10 @@ namespace PharmacyMedicineSupply.Controllers
                         _log.Error("error while getting stock");
                         return View("NoStock");
                     }
+                    else if(_response.StatusCode==HttpStatusCode.Unauthorized)
+                    {
+                        return View("Unauthorized");
+                    }
                     else
                     {
                         return View("Error");
@@ -88,6 +92,10 @@ namespace PharmacyMedicineSupply.Controllers
                     {
                         _log.Error("error while getting supply");
                         return View("NoStock");
+                    }
+                    else if (_response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return View("Unauthorized");
                     }
                     else
                     {

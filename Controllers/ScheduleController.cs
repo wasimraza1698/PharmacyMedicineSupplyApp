@@ -53,6 +53,10 @@ namespace PharmacyMedicineSupply.Controllers
                     _log.Error("could not schedule");
                     return View("NoSchedule");
                 }
+                else if(response.StatusCode==HttpStatusCode.Unauthorized)
+                {
+                    return View("Unauthorized");
+                }
                 else
                 {
                     _log.Error("Error occured in Micro-Service called for scheduling");
@@ -68,9 +72,17 @@ namespace PharmacyMedicineSupply.Controllers
 
         public IActionResult Schedule()
         {
-            List<RepSchedule> schedules =
-                JsonConvert.DeserializeObject<List<RepSchedule>>(TempData["result"].ToString());
-            return View(schedules);
+            try
+            {
+                List<RepSchedule> schedules =
+                    JsonConvert.DeserializeObject<List<RepSchedule>>(TempData["result"].ToString());
+                return View(schedules);
+            }
+            catch (Exception e)
+            {
+                _log.Error(e.Message);
+                return View("Error");
+            }
         }
     }
 }
