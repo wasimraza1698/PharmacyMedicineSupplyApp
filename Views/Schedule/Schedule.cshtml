@@ -4,10 +4,8 @@
     ViewData["Title"] = "Schedule";
 }
 
-<h1>Schedule</h1>
-
-<table class="table">
-    <thead>
+<table class="table table-bordered table-hover mt-5">
+    <thead  class="table-danger">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.RepName)
@@ -30,7 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.DoctorContactNumber)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>

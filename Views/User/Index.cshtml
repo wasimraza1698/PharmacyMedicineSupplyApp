@@ -3,9 +3,18 @@
 @{
     ViewData["Title"] = "Index";
 }
-<div class="container">
-    <div></div>
+<div class="container border my-5">
+    <div class="row p-5">
+        <div class="col-12 justify-content-center"><h3>Medical Representative Meeting Schedule</h3></div>
+        <div class="col-12"><p>You can schedule meeting between medical representatives and doctors for the next 5 working days</p></div>
+        <div class="col-12">@Html.ActionLink("Schedule Meeting", "Index", "Schedule", null, new { @class = "btn btn-danger" })</div>
+    </div>
 </div>
-@Html.ActionLink("Schedule Meeting","Index","Schedule",null,new {@class="btn btn-primary"})
-@Html.ActionLink("Supply Medicine","Index","Demand",null,new {@class="btn btn-primary"})
+<div class="container border my-5">
+    <div class="row p-5">
+        <div class="col-12 justify-content-center"><h3>Get the Supply</h3></div>
+        <div class="col-12"><p>You can get the supply that need to be distributed to  pharmacies based on demand provided and stock available</p></div>
+        <div class="col-12">@Html.ActionLink("Supply Medicine", "Index", "Demand", null, new { @class = "btn btn-danger" })</div>
+    </div>
+</div>
 

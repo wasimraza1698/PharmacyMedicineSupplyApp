@@ -4,10 +4,10 @@
     ViewData["Title"] = "DisplaySupply";
 }
 
-<h1>DisplaySupply</h1>
 
-<table class="table">
-    <thead>
+<div class="container">
+    <table class="table table-hover table-bordered mt-5">
+        <thead class="table-danger">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.PharmacyName)
@@ -18,22 +18,23 @@
             <th>
                 @Html.DisplayNameFor(model => model.SupplyCount)
             </th>
-            <th></th>
         </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PharmacyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MedicineName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SupplyCount)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PharmacyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MedicineName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplyCount)
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>
