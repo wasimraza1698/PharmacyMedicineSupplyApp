@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using PharmacyMedicineSupply.Repositories;
 
 namespace PharmacyMedicineSupply.Providers
 {
@@ -16,6 +17,12 @@ namespace PharmacyMedicineSupply.Providers
         private readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(DemandProvider));
 
         readonly HttpClient httpClient = new HttpClient();
+        private readonly ISupplyRepo _supplyRepo;
+
+        public DemandProvider(ISupplyRepo supplyRepo)
+        {
+            _supplyRepo = supplyRepo;
+        }
         public async Task<HttpResponseMessage> GetSupply(List<MedicineDemand> demands,string token)
         {
             try
@@ -67,6 +74,24 @@ namespace PharmacyMedicineSupply.Providers
             catch (Exception e)
             {
                 _log.Error("Error while converting Stock to Demand in DemandProvider"+e.Message);
+                throw;
+            }
+        }
+
+        public void AddSupplyToDB(List<Supply> supplies)
+        {
+            try
+            {
+                foreach (var s in supplies)
+                {
+                    SupplyDto supply = new SupplyDto(){MedicineName = s.MedicineName,PharmacyName = s.PharmacyName,SupplyCount = s.SupplyCount};
+                    _log.Info("Adding supplies to database");
+                    _supplyRepo.Add(supply);
+                }
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error while adding supplies to database - "+e.Message);
                 throw;
             }
         }

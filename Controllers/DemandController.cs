@@ -123,6 +123,7 @@ namespace PharmacyMedicineSupply.Controllers
                 {
                     _log.Info("Displaying Supply List");
                     List<Supply> supplies = JsonConvert.DeserializeObject<List<Supply>>(TempData["supply"].ToString());
+                    _demandProvider.AddSupplyToDB(supplies);
                     return View(supplies.OrderBy(s => s.PharmacyName));
                 }
             }

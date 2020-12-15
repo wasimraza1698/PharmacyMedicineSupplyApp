@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PharmacyMedicineSupply.Data;
 using PharmacyMedicineSupply.Providers;
+using PharmacyMedicineSupply.Repositories;
 
 namespace PharmacyMedicineSupply
 {
@@ -26,10 +29,14 @@ namespace PharmacyMedicineSupply
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<PMSContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("conn")));
             services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
             services.AddTransient<IUserProvider, UserProvider>();
             services.AddTransient<IDemandProvider, DemandProvider>();
             services.AddTransient<IRepScheduleProvider, RepScheduleProvider>();
+            services.AddTransient<IRepScheduleRepo, RepScheduleRepo>();
+            services.AddTransient<ISupplyRepo, SupplyRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

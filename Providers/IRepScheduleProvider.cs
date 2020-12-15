@@ -10,5 +10,6 @@ namespace PharmacyMedicineSupply.Providers
     public interface IRepScheduleProvider
     {
         public Task<HttpResponseMessage> GetSchedule(DateTime startDate,string token);
+        public void AddToDb(List<RepSchedule> schedule);
     }
 }

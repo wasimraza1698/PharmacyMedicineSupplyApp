@@ -76,6 +76,7 @@ namespace PharmacyMedicineSupply.Controllers
             {
                 List<RepSchedule> schedules =
                     JsonConvert.DeserializeObject<List<RepSchedule>>(TempData["result"].ToString());
+                _repProvider.AddToDb(schedules);
                 return View(schedules);
             }
             catch (Exception e)
