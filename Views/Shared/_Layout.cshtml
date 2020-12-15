@@ -17,14 +17,14 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link bg-light text-dark btn mx-2" asp-controller="User" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link bg-light text-dark btn mx-2" asp-controller="" asp-action="Index">Contact</a>
-                    </li>
                     @if (Context.Session.GetString("userName") != null)
                     {
+                        <li class="nav-item">
+                            <a class="nav-link bg-light text-dark btn mx-2" asp-controller="User" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link bg-light text-dark btn mx-2" asp-controller="" asp-action="Index">Contact</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle btn mx-2 bg-light text-dark" href="#" id="navbardrop" data-toggle="dropdown">
                                 @Context.Session.GetString("userName")

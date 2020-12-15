@@ -1,4 +1,5 @@
-﻿@model PharmacyMedicineSupply.Models.ScheduleDate
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model PharmacyMedicineSupply.Models.ScheduleDate
 
 @{
     ViewData["Title"] = "Index";
@@ -18,7 +19,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Date" class="control-label"></label>
-                    <input type="date" asp-for="Date" class="form-control"/>
+                    <input type="date" asp-for="Date" class="form-control" min="@ViewBag.Min"/>
                     <span asp-validation-for="Date" class="text-danger"></span>
                 </div>
                 <div class="form-group">

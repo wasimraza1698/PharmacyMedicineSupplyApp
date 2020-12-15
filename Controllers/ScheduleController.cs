@@ -27,6 +27,8 @@ namespace PharmacyMedicineSupply.Controllers
             try
             {
                 _log.Info("Displaying Index page of Scheduling");
+                string today = DateTime.Today.Year.ToString()+"-"+DateTime.Today.Month.ToString()+"-"+DateTime.Today.Day;
+                ViewBag.Min = today;
                 return View();
             }
             catch (Exception e)
